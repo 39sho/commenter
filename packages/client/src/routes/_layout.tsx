@@ -1,17 +1,18 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { css } from "../../styled-system/css";
-import { Container, Divider, HStack } from "../../styled-system/jsx";
+import { Box, Divider, HStack } from "../../styled-system/jsx";
 import logo from "../assets/logo.svg";
 
 export const Route = createRootRoute({
     component: () => (
         <>
-            <Container
+            <Box
                 className={css({
                     pos: "sticky",
                     top: 0,
                     bgColor: "white",
                     zIndex: 100,
+                    px: 3,
                 })}
             >
                 <HStack gap={3} justify="space-between">
@@ -28,10 +29,10 @@ export const Route = createRootRoute({
                     </HStack>
                 </HStack>
                 <Divider orientation="horizontal" />
-            </Container>
-            <Container>
+            </Box>
+            <Box className={css({ p: 3 })}>
                 <Outlet />
-            </Container>
+            </Box>
         </>
     ),
 });

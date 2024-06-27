@@ -16,7 +16,6 @@ function Index() {
         <Center className={cq({})}>
             <VStack
                 className={css({
-                    p: 3,
                     w: {
                         base: "100%",
                         "@/5xl": "50%",

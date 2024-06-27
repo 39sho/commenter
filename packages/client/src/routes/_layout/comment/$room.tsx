@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { css } from "../../../../styled-system/css";
 import {
+    Box,
     Center,
-    Container,
     HStack,
     Spacer,
     VStack,
@@ -55,7 +55,6 @@ function Comment() {
                         },
                     })}
                 >
-                    <Spacer />
                     <VStack className={css({ w: "100%" })}>
                         {commentList.map((comment, index) => (
                             <div
@@ -72,7 +71,7 @@ function Comment() {
                     <Spacer m={10} />
                 </VStack>
             </Center>
-            <Container
+            <Box
                 className={cq({
                     pos: "fixed",
                     bottom: 0,
@@ -87,7 +86,7 @@ function Comment() {
                                 base: "100%",
                                 "@/5xl": "50%",
                             },
-                            py: 3,
+                            p: 3,
                         })}
                     >
                         <input
@@ -128,7 +127,7 @@ function Comment() {
                         </button>
                     </HStack>
                 </Center>
-            </Container>
+            </Box>
         </>
     );
 }
