@@ -6,7 +6,14 @@ import logo from "../assets/logo.svg";
 export const Route = createRootRoute({
     component: () => (
         <>
-            <Container>
+            <Container
+                className={css({
+                    pos: "sticky",
+                    top: 0,
+                    bgColor: "white",
+                    zIndex: 100,
+                })}
+            >
                 <HStack gap={3} justify="space-between">
                     <Link to="/">
                         <img

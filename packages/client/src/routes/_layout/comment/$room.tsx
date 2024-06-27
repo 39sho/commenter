@@ -1,7 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { css } from "../../../../styled-system/css";
-import { Center, HStack, Spacer, VStack } from "../../../../styled-system/jsx";
+import {
+    Center,
+    Container,
+    HStack,
+    Spacer,
+    VStack,
+} from "../../../../styled-system/jsx";
 import { center } from "../../../../styled-system/patterns/center";
 import { cq } from "../../../../styled-system/patterns/cq";
 
@@ -33,6 +39,10 @@ function Comment() {
         };
     }, [room]);
 
+    useEffect(() => {
+        scrollBy(0, 9999); // auto scroll
+    }, [commentList]);
+
     return (
         <>
             <Center className={cq({})}>
@@ -47,8 +57,9 @@ function Comment() {
                 >
                     <Spacer />
                     <VStack className={css({ w: "100%" })}>
-                        {commentList.map((comment) => (
+                        {commentList.map((comment, index) => (
                             <div
+                                key={index}
                                 className={css({
                                     w: "100%",
                                     overflowWrap: "break-word",
@@ -58,7 +69,27 @@ function Comment() {
                             </div>
                         ))}
                     </VStack>
-                    <HStack className={css({ w: "100%" })}>
+                    <Spacer m={10} />
+                </VStack>
+            </Center>
+            <Container
+                className={cq({
+                    pos: "fixed",
+                    bottom: 0,
+                    left: 0,
+                    w: "100%",
+                })}
+            >
+                <Center>
+                    <HStack
+                        className={css({
+                            w: {
+                                base: "100%",
+                                "@/5xl": "50%",
+                            },
+                            py: 3,
+                        })}
+                    >
                         <input
                             onChange={(e) => setComment(e.target.value)}
                             onKeyDown={(e) => {
@@ -75,6 +106,7 @@ function Comment() {
                                 rounded: "sm",
                                 p: 1,
                                 w: "100%",
+                                bgColor: "white",
                             })}
                         ></input>
                         <button
@@ -89,14 +121,14 @@ function Comment() {
                                 px: 2,
                                 py: 1,
                                 wordBreak: "keep-all",
-                                flexGrow: 1,
+                                bgColor: "white",
                             })}
                         >
                             コメントする
                         </button>
                     </HStack>
-                </VStack>
-            </Center>
+                </Center>
+            </Container>
         </>
     );
 }
