@@ -1,7 +1,20 @@
 import "./index.css";
-import { StrictMode } from "react";
+import { StrictMode, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+
+// eslint-disable-next-line react-refresh/only-export-components
+const TanStackRouterDevtools =
+    process.env.NODE_ENV === "production"
+        ? () => null // Render nothing in production
+        : lazy(() =>
+              // Lazy load in development
+              import("@tanstack/router-devtools").then((res) => ({
+                  default: res.TanStackRouterDevtools,
+                  // For Embedded Mode
+                  // default: res.TanStackRouterDevtoolsPanel
+              }))
+          );
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
@@ -23,6 +36,7 @@ if (!rootElement.innerHTML) {
     root.render(
         <StrictMode>
             <RouterProvider router={router} />
+            <TanStackRouterDevtools router={router} />
         </StrictMode>
     );
 }
