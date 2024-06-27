@@ -1,0 +1,7 @@
+// https://nitro.unjs.io/guide/typescript
+{
+    "compilerOptions": {
+        "strict": true
+    },
+    "extends": "./.nitro/types/tsconfig.json"
+}

@@ -1,0 +1,28 @@
+{
+    "name": "viewer",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "files": [
+        "dist",
+        "types"
+    ],
+    "main": "./dist/main.js",
+    "module": "./dist/main.js",
+    "types": "./types/lib/main.d.ts",
+    "exports": {
+        ".": {
+            "types": ".//types/lib/main.d.ts",
+            "import": "./dist/main.js",
+            "require": "./dist/main.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build"
+    },
+    "devDependencies": {
+        "typescript": "^5.4.5",
+        "vite": "^5.2.10"
+    }
+}

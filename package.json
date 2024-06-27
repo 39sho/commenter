@@ -1,0 +1,11 @@
+{
+    "name": "commenter",
+    "version": "0.0.0",
+    "description": "",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "39sho",
+    "license": "MIT",
+    "packageManager": "pnpm@9.3.0"
+}
