@@ -28,6 +28,14 @@ export default ({ loaderData }: Route.ComponentProps) => {
     return () => ws.close();
   }, [loaderData.roomId, comments]);
 
+  const sendComment = () => {
+    const ws = wsRef.current;
+    if (ws == null) return;
+
+    if (comment !== "") ws.send(comment);
+    setComment("");
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-20">
       <Card>
@@ -43,18 +51,13 @@ export default ({ loaderData }: Route.ComponentProps) => {
               required
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-            />
-            <Button
-              onClick={() => {
-                const ws = wsRef.current;
-                if (ws == null) return;
-
-                if (comment !== "") ws.send(comment);
-                setComment("");
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendComment();
+                }
               }}
-            >
-              送信
-            </Button>
+            />
+            <Button onClick={sendComment}>送信</Button>
           </div>
           <Separator />
           <div>

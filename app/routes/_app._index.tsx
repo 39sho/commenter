@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRef, useState } from "react";
-import { Link, href } from "react-router";
+import { Link, href, useNavigate } from "react-router";
 
 const validate = (input: HTMLInputElement) => {
   if (input == null) return;
@@ -27,6 +27,8 @@ const validate = (input: HTMLInputElement) => {
 export default () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [roomId, setRoomId] = useState("");
+
+  const navigate = useNavigate();
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-20">
@@ -70,6 +72,11 @@ export default () => {
             }}
             ref={inputRef}
             required
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                navigate(href("/room/:roomId", { roomId }));
+              }
+            }}
           />
         </CardContent>
       </Card>
