@@ -4,7 +4,7 @@
 declare namespace Cloudflare {
 	interface Env {
 		VALUE_FROM_CLOUDFLARE: "Hello from Cloudflare";
-		ROOM: DurableObjectNamespace<import("./workers/app").Room>;
+		ROOM: DurableObjectNamespace<import("./src/workers/app").Room>;
 	}
 }
 interface Env extends Cloudflare.Env {}
