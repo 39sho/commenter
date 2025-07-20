@@ -1,61 +1,45 @@
-import { DurableObject } from "cloudflare:workers";
-import { Hono } from "hono";
+import {
+  type Connection,
+  Server,
+  type WSMessage,
+  routePartykitRequest,
+} from "partyserver";
 import { createRequestHandler } from "react-router";
+import * as schema from "../schema/message";
 
-export class Room extends DurableObject {
-  async fetch(_request: Request) {
-    const webSocketPair = new WebSocketPair();
-    const [client, server] = Object.values(webSocketPair);
+export class Room extends Server {
+  static options = { hibernate: true };
+  onMessage(_connection: Connection, message: WSMessage) {
+    const id = crypto.randomUUID();
+    const comment = schema.comment.safeParse({ id, content: message });
+    if (comment.data == null) return;
 
-    this.ctx.acceptWebSocket(server);
-
-    return new Response(null, { status: 101, webSocket: client });
-  }
-
-  async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer) {
-    for (const conection of this.ctx.getWebSockets()) {
-      conection.send(message);
-    }
-  }
-
-  async webSocketClose(
-    ws: WebSocket,
-    code: number,
-    _reason: string,
-    _wasClean: boolean,
-  ) {
-    ws.close(code);
+    this.broadcast(JSON.stringify(comment.data));
   }
 }
 
-const app = new Hono<{ Bindings: Env }>();
-
-app.get("/api/ws", (c) => {
-  const upgradeHeader = c.req.header("Upgrade");
-  if (upgradeHeader == null || upgradeHeader !== "websocket") {
-    return c.text("expected Upgrade", 426);
+declare module "react-router" {
+  export interface AppLoadContext {
+    cloudflare: {
+      env: Env;
+      ctx: ExecutionContext;
+    };
   }
+}
 
-  const roomId = c.req.query("roomId");
-  if (roomId == null) {
-    return c.text("missing roomId", 400);
-  }
+const requestHandler = createRequestHandler(
+  () => import("virtual:react-router/server-build"),
+  import.meta.env.MODE,
+);
 
-  const id = c.env.ROOM.idFromName(roomId);
-  const room = c.env.ROOM.get(id);
-
-  return room.fetch(c.req.raw);
-});
-
-app.all("*", (c) => {
-  const requestHandler = createRequestHandler(
-    () => import("virtual:react-router/server-build"),
-    import.meta.env.MODE,
-  );
-
-  return requestHandler(c.req.raw, {
-    cloudflare: { env: c.env, ctx: c.executionCtx },
-  });
-});
-
-export default app;
+export default {
+  async fetch(request, env, ctx) {
+    return (
+      // @ts-expect-error
+      (await routePartykitRequest(request, env)) ??
+      (await requestHandler(request, {
+        cloudflare: { env, ctx },
+      }))
+    );
+  },
+} satisfies ExportedHandler<Env>;

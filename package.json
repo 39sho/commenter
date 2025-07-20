@@ -22,10 +22,13 @@
     "hono": "^4.7.11",
     "isbot": "^5.1.27",
     "lucide-react": "^0.513.0",
+    "partyserver": "^0.0.72",
+    "partysocket": "^1.1.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.5.3",
-    "tailwind-merge": "^3.3.0"
+    "tailwind-merge": "^3.3.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

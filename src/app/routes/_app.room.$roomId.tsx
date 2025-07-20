@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useEffect, useRef, useState } from "react";
+import usePartySocket from "partysocket/react";
+import { useState } from "react";
+import * as schema from "../../schema/message";
 import type { Route } from "./+types/_app.room.$roomId";
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
@@ -10,28 +12,21 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 };
 
 export default ({ loaderData }: Route.ComponentProps) => {
-  const wsRef = useRef<WebSocket | null>(null);
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<schema.Comment[]>([]);
   const [comment, setComment] = useState("");
 
-  useEffect(() => {
-    const url = new URL("/api/ws", location.origin);
-    url.searchParams.append("roomId", loaderData.roomId);
-    const ws = new WebSocket(url);
+  const ws = usePartySocket({
+    party: "room",
+    room: loaderData.roomId,
+    onMessage(e) {
+      const comment = schema.comment.safeParse(JSON.parse(e.data));
+      if (comment.data == null) return;
 
-    wsRef.current = ws;
-
-    ws.addEventListener("message", (e: MessageEvent<string>) => {
-      setComments([e.data, ...comments]);
-    });
-
-    return () => ws.close();
-  }, [loaderData.roomId, comments]);
+      setComments([comment.data, ...comments]);
+    },
+  });
 
   const sendComment = () => {
-    const ws = wsRef.current;
-    if (ws == null) return;
-
     if (comment !== "") ws.send(comment);
     setComment("");
   };
@@ -62,7 +57,7 @@ export default ({ loaderData }: Route.ComponentProps) => {
           <Separator />
           <div>
             {comments.map((comment) => (
-              <div key={comment}>{comment}</div>
+              <div key={comment.id}>{comment.content}</div>
             ))}
           </div>
         </CardContent>

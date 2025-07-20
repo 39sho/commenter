@@ -1,5 +1,7 @@
 import { Viewer } from "@/lib/viewer";
+import usePartySocket from "partysocket/react";
 import { useEffect, useRef } from "react";
+import * as schema from "../../schema/message";
 import type { Route } from "./+types/_app.room.$roomId";
 
 export const loader = async ({ params }: Route.LoaderArgs) => {
@@ -7,27 +9,30 @@ export const loader = async ({ params }: Route.LoaderArgs) => {
 };
 
 export default ({ loaderData }: Route.ComponentProps) => {
-  const wsRef = useRef<WebSocket | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const viewRef = useRef<Viewer | null>(null);
+
+  const ws = usePartySocket({
+    party: "room",
+    room: loaderData.roomId,
+    onMessage(e) {
+      if (viewRef.current == null) return;
+
+      const comment = schema.comment.safeParse(JSON.parse(e.data));
+      if (comment.data == null) return;
+
+      viewRef.current.addMessage(comment.data.content);
+    },
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas == null) return;
+
     const viewer = new Viewer(canvas);
+    viewRef.current = viewer;
     viewer.start();
-
-    const url = new URL("/api/ws", location.origin);
-    url.searchParams.append("roomId", loaderData.roomId);
-    const ws = new WebSocket(url);
-
-    wsRef.current = ws;
-
-    ws.addEventListener("message", (e: MessageEvent<string>) => {
-      viewer.addMessage(e.data);
-    });
-
-    return () => ws.close();
-  }, [loaderData.roomId]);
+  }, []);
 
   return (
     <canvas ref={canvasRef} width={1920} height={1080} className="w-full" />
