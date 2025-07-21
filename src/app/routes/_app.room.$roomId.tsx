@@ -47,7 +47,7 @@ export default ({ loaderData }: Route.ComponentProps) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-20 flex flex-col gap-8">
+    <div className="max-w-3xl mx-auto px-4 py-36 flex flex-col gap-8">
       <Card>
         <CardHeader>
           <CardTitle>部屋ID: {loaderData.roomId}</CardTitle>

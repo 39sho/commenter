@@ -9,8 +9,8 @@ export default () => {
 
   return (
     <>
-      <div className="bg-brand-secondary min-h-lvh overflow-y-scroll">
-        <header className="bg-brand-dark text-brand-light">
+      <div className="bg-brand-secondary h-lvh overflow-y-scroll">
+        <header className="bg-brand-dark text-brand-light fixed w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16 items-center">
               <Link to={href("/")} className="flex items-center gap-4">

@@ -39,7 +39,7 @@ export default () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-20">
+    <div className="max-w-3xl mx-auto px-4 py-36">
       <Card>
         <CardHeader>
           <CardTitle>部屋に参加する</CardTitle>
