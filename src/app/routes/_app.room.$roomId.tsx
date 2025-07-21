@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useUsername } from "@/lib/username";
 import usePartySocket from "partysocket/react";
 import { useState } from "react";
 import * as schema from "../../schema/message";
@@ -22,6 +23,8 @@ export default ({ loaderData }: Route.ComponentProps) => {
   );
   const [commentInput, setCommentInput] = useState("");
 
+  const { username } = useUsername();
+
   const ws = usePartySocket({
     party: "room",
     room: loaderData.roomId,
@@ -37,7 +40,7 @@ export default ({ loaderData }: Route.ComponentProps) => {
     if (commentInput === "") return;
     const comment = {
       content: commentInput,
-      user: "user1",
+      user: username,
     } satisfies schema.Comment;
     ws.send(JSON.stringify(comment));
     setCommentInput("");
