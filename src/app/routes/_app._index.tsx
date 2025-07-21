@@ -10,11 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRef, useState } from "react";
-import { Link, href, useNavigate } from "react-router";
+import { href, useNavigate } from "react-router";
 
 const validate = (input: HTMLInputElement) => {
-  if (input == null) return;
-
   if (input.validity.valueMissing) {
     input.setCustomValidity("部屋IDを入力してください");
   } else {
@@ -30,6 +28,16 @@ export default () => {
 
   const navigate = useNavigate();
 
+  const joinRoom = () => {
+    const input = inputRef.current;
+    if (input == null) return;
+
+    const isValid = validate(input);
+    if (!isValid) return;
+
+    navigate(href("/room/:roomId", { roomId }));
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-20">
       <Card>
@@ -39,24 +47,7 @@ export default () => {
             部屋を作成する場合も参加するを押下してください
           </CardDescription>
           <CardAction>
-            <Button
-              asChild
-              onClick={(e) => {
-                const input = inputRef.current;
-                if (input == null) {
-                  e.preventDefault();
-                  return;
-                }
-
-                const isValid = validate(input);
-
-                if (!isValid) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              <Link to={href("/room/:roomId", { roomId })}>参加する</Link>
-            </Button>
+            <Button onClick={joinRoom}>参加する</Button>
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-1.5">
@@ -74,7 +65,7 @@ export default () => {
             required
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                navigate(href("/room/:roomId", { roomId }));
+                joinRoom();
               }
             }}
           />
