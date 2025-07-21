@@ -18,7 +18,7 @@ export default ({ loaderData }: Route.ComponentProps) => {
     onMessage(e) {
       if (viewRef.current == null) return;
 
-      const comment = schema.comment.safeParse(JSON.parse(e.data));
+      const comment = schema.commentWithId.safeParse(JSON.parse(e.data));
       if (comment.data == null) return;
 
       viewRef.current.addMessage(comment.data.content);

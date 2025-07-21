@@ -3,9 +3,7 @@
   "name": "commenter",
   "compatibility_date": "2025-04-04",
   "main": "./src/workers/app.ts",
-  "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare"
-  },
+  "compatibility_flags": ["nodejs_compat"],
   "migrations": [
     {
       "tag": "v1",
